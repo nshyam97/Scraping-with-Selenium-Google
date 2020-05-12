@@ -1,15 +1,9 @@
-import requests
 from selenium import webdriver
 from github import Github
 import secrets
 import time
 from selenium.webdriver.chrome.options import Options
 import pandas
-import numpy
-
-pandas.set_option('display.width', 1000)
-pandas.set_option('display.max_rows', None)
-pandas.set_option('display.max_columns', 15)
 
 # URL of Google Community Mobility Reports
 URL = 'https://www.google.com/covid19/mobility/'
@@ -20,11 +14,15 @@ headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleW
 
 # function to download the csv from the link in the webpage
 def download_csv(download_link):
+    # Read csv into pandas as we need to manipulate before we commit it
     data = pandas.read_csv(download_link)
+    # Remove sub region 2 column as not needed
     data = data.drop('sub_region_2', axis=1)
+    # Just get the UK rows without a sub region
     GB = data[(data['country_region_code'] == 'GB') & (data['sub_region_1'].isnull())]
+    # Drop unnecessary columns for export
     GB = GB.drop(['country_region_code', 'sub_region_1'], axis=1)
-    # return the content of the csv file to upload to github
+    # return the final data frame as csv content to push to github
     return GB.to_csv(index=False)
 
 
