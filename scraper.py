@@ -19,9 +19,9 @@ def download_csv(download_link):
     # Remove sub region 2 column as not needed
     data = data.drop('sub_region_2', axis=1)
     # Just get the UK rows without a sub region
-    GB = data[(data['country_region_code'] == 'GB') & (data['sub_region_1'].isnull())]
+    GB = data[(data['country_region_code'] == 'GB')]
     # Drop unnecessary columns for export
-    GB = GB.drop(['country_region_code', 'sub_region_1'], axis=1)
+    GB = GB.drop(['country_region_code'], axis=1)
     # return the final data frame as csv content to push to github
     return GB.to_csv(index=False)
 
