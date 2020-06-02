@@ -57,10 +57,13 @@ def send_to_github(file):
     g = Github(secrets.token)
     # Identify the repo we want to commit to
     repo = g.get_repo('nshyam97/Google-Community-Mobility-Data')
-    # Identify the file we want to update
-    contents = repo.get_contents('UK_Global_Mobility_Report.csv')
-    # Update and commit new contents to file
-    repo.update_file(contents.path, 'file update', file, contents.sha, branch='master')
+    # Get repo contents
+    contents = repo.get_contents('')
+    for content in contents:
+        # Find the csv file within the repo
+        if content.path == 'UK_Global_Mobility_Report.csv':
+            # Update the file
+            repo.update_file(content.path, 'file update', file, content.sha, branch='master')
 
 
 scrape_website()
